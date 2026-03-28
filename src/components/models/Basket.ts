@@ -24,11 +24,7 @@ export class Basket {
   }
 
   getTotal(): number {
-    let total = 0;
-    for (let i = 0; i < this.items.length; i++) {
-      total += this.items[i].price ?? 0;
-    }
-    return total;
+    return this.items.reduce((acc, item) => acc + (item.price || 0), 0);
   }
 
   getCount(): number {
@@ -36,12 +32,7 @@ export class Basket {
   }
 
   contains(id: string): boolean {
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id === id) {
-        return true;
-      }
-    }
-    return false;
+    return this.items.some((item) => item.id === id);
   }
 
 }
