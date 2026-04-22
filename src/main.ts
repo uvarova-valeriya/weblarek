@@ -79,19 +79,20 @@ events.on('catalog:changed', () => {
 
 events.on('card:select', (product: IProduct) => {
   const cardElement = cloneTemplate(cardPreviewTemplate);
-  let inBasket = basketModel.contains(product.id);
+  let inBasketLet = basketModel.contains(product.id);
   const preview = new CardPreview(cardElement, {
     onAddToBasket: () => {
-      if (inBasket) {
+      if (inBasketLet) {
         events.emit('card:remove-from-basket', { id: product.id });
+        modal.close();
       } else {
         events.emit('card:add-to-basket', product);
       }
-      inBasket = !inBasket;
-      preview.inBasket = inBasket;
+      inBasketLet = !inBasketLet;
+      preview.inBasket = inBasketLet;
     }
   });
-  preview.inBasket = inBasket;
+  preview.inBasket = inBasketLet;
   preview.render(product);
   modal.content = cardElement;
   modal.open();

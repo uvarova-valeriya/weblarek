@@ -52,4 +52,12 @@ export class CardPreview extends Card<ICardPreviewData> {
     this.inBasketElement = value;
     this.buttonElement.textContent = value ? 'Удалить из корзины' : 'В корзину';
   }
+
+  set price(value: number | null) {
+    super.price = value;
+    if (value === null) {
+      this.buttonElement.disabled = true;
+      this.buttonElement.textContent = 'Недоступно';
+    }
+  }
 }
