@@ -1,30 +1,37 @@
 import { IBuyer, TPayment } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Buyer {
-  payment: TPayment;
-  address: string;
-  phone: string;
-  email: string;
+  private payment: TPayment;
+  private address: string;
+  private phone: string;
+  private email: string;
+  protected events: IEvents;
 
-  constructor() {
+  constructor(events: IEvents) {
     this.payment = '';
     this.address = '';
     this.phone = '';
     this.email = '';
+    this.events = events;
   }
 
   setPayment(payment: TPayment): void {
     this.payment = payment;
+    this.events.emit('buyer:changed');
   }
   setAddress(address: string): void {
     this.address = address;
+    this.events.emit('buyer:changed');
   }
   setPhone(phone: string): void {
     this.phone = phone;
-
+    this.events.emit('buyer:changed');
   }
+
   setEmail(email: string): void {
     this.email = email;
+    this.events.emit('buyer:changed');
   }
 
   getData(): IBuyer {
@@ -41,6 +48,7 @@ export class Buyer {
     this.address = '';
     this.phone = '';
     this.email = '';
+    this.events.emit('buyer:changed');
   }
 
   validate(): Map<string, string> {
