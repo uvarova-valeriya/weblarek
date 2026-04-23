@@ -1,20 +1,12 @@
-import { IProduct } from '../../types/index'
-import { ensureElement } from '../../utils/utils'
+import { IProduct } from '../../types/index';
+import { ensureElement } from '../../utils/utils';
 import { Card } from './Card';
+import { categoryMap }  from '../../utils/constants';
+import { CategoryKey } from '../../types/index'
 
 interface ICardCatalogActions {
   onClick?: () => void;
 }
-
-export const categoryMap = {
-  'софт-скил': 'card__category_soft',
-  'хард-скил': 'card__category_hard',
-  'другое': 'card__category_other',
-  'дополнительное': 'card__category_additional',
-  'кнопка': 'card__category_button',
-};
-
-export type CategoryKey = keyof typeof categoryMap;
 
 export type ICardCatalogData = Pick<IProduct, 'title' | 'price' | 'category' | 'image'>;
 

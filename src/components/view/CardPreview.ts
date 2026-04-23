@@ -1,7 +1,9 @@
 import { IProduct } from '../../types/index'
 import { ensureElement } from '../../utils/utils'
 import { Card } from './Card';
-import { categoryMap, CategoryKey } from './CardCatalog';
+import { categoryMap } from '../../utils/constants';
+import { CategoryKey } from '../../types/index'
+import { IEvents } from '../base/Events';
 
 interface ICardPreviewActions {
   onAddToBasket?: () => void;
@@ -16,7 +18,7 @@ export class CardPreview extends Card<ICardPreviewData> {
   protected buttonElement: HTMLButtonElement;
   protected inBasketElement: boolean = false;
 
-  constructor(container: HTMLElement, actions?: ICardPreviewActions) {
+  constructor(container: HTMLElement, protected events?: IEvents) {
     super(container);
 
     this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
@@ -24,9 +26,10 @@ export class CardPreview extends Card<ICardPreviewData> {
     this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
     this.buttonElement = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-    if (actions?.onAddToBasket) {
-      this.buttonElement.addEventListener('click', actions.onAddToBasket);
-    }
+    this.buttonElement.addEventListener('click', () => {
+      console.log('клик по кнопке превью');
+      this.events?.emit('preview:button-click');
+    });
   }
 
   set category(value: string) {

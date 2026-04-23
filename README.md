@@ -417,17 +417,23 @@ Presenter - презентер содержит основную логику п
 `card:select` - клик по карточке товара (открытие превью);
 `card:add-to-basket` - добавление товара в корзину;
 `card:remove-from-basket` - удаление товара из корзины;
-`{formName}:change` - изменение любого поля формы (`order:change` или `contacts:change`);
-`order:next` - переход ко второй форме;
-`order:submit` - отправка заказа (кнопка "Оплатить");
 `modal:open` - при открытии модального окна;
 `modal:close` - при закрытии модального окна;
 `success:close` - клик по кнопке "За новыми покупками!";
+`success:open` - модальное окно успеха открыто
+
+`preview:button-click` - сообщить, что кнопка нажата
+`{formName}:change` - изменение любого поля формы (`order:change` или `contacts:change`);
 `basket:checkout` - клик по кнопке "Оформить";
+`order:form-created` - регистрирует форму и подписывается на `buyer:changed`
+`order:next` - переход ко второй форме;
+`contacts:form-created` - регистрирует форму контактов и подписывается на `buyer:changed`
+`order:submit` - отправка заказа (кнопка "Оплатить");
 
 `basket:changed` - изменение корзины;
 `buyer:changed` - изменение данных покупателя;
-`catalog:changed` - изменение каталога.
+`catalog:changed` - изменение каталога;
+`selected:changed` - выбран новый товар;
 
 
 ### Презентер
@@ -460,12 +466,3 @@ Presenter - презентер содержит основную логику п
 `header` - компонент шапки;
 `gallery` - компонент галереи;
 `modal` - компонент модального окна;
-
-`currentModalContent` - отслеживает текущий тип содержимого модального окна:
-`let currentModalContent: 'basket' | 'order' | 'contacts' | 'success' | null = null;`
-Используется для:
-Обновления корзины, когда она открыта;
-Сброса при закрытии модального окна.
-
-`currentOrderForm` - ссылка на текущую форму заказа для обновления валидности;
-`currentContactsForm` - ссылка на текущую форму контактов для обновления валидности.

@@ -25,11 +25,13 @@ export class Basket extends Component<IBasketData> {
   }
 
   set items(items: HTMLElement[]) {
+    this.listElement.innerHTML = '';
     if (items.length === 0) {
       this.buttonElement.disabled = true;
     } else {
       items.forEach(item => {
         this.listElement.appendChild(item);
+        this.buttonElement.disabled = false;
       });
     }
   }

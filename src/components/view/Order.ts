@@ -3,11 +3,6 @@ import { ensureElement } from '../../utils/utils'
 import { IEvents } from '../base/Events';
 import { Form } from './Form';
 
-interface IOrderActions {
-  onPaymentChange?: (payment: 'card' | 'cash') => void;
-  onAddressChange?: (address: string) => void;
-}
-
 export type IOrderForm = Pick<IOrder, 'payment' | 'address'>;
 
 export class Order extends Form<IOrderForm> {
@@ -16,7 +11,7 @@ export class Order extends Form<IOrderForm> {
   protected addressInput: HTMLInputElement;
   protected nextButton: HTMLButtonElement;
 
-  constructor(container: HTMLFormElement, events: IEvents, actions?: IOrderActions) {
+  constructor(container: HTMLFormElement, events: IEvents) {
     super(container, events)
 
     this.cardButtonElement = ensureElement<HTMLButtonElement>('.button_alt[name=card]', this.container);
@@ -25,12 +20,10 @@ export class Order extends Form<IOrderForm> {
     this.nextButton = ensureElement<HTMLButtonElement>('.order__button', this.container);
 
     this.cardButtonElement.addEventListener('click', () => {
-      actions?.onPaymentChange?.('card');
       this.events?.emit('order:change', { payment: 'card' });
     });
 
     this.cashButtonElement.addEventListener('click', () => {
-      actions?.onPaymentChange?.('cash');
       this.events?.emit('order:change', { payment: 'cash' });
     });
 
@@ -40,7 +33,7 @@ export class Order extends Form<IOrderForm> {
     });
   }
 
-  set payment(value: 'card' | 'cash') {
+  set payment(value: 'card' | 'cash' | '') {
     this.cardButtonElement.classList.toggle('button_alt-active', value === 'card');
     this.cashButtonElement.classList.toggle('button_alt-active', value === 'cash');
   }
