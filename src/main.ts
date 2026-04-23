@@ -23,7 +23,7 @@ import { Contacts } from './components/view/Contacts';
 // import { Form } from './components/view/Form';
 import { Gallery } from './components/view/Gallery';
 import { Modal } from './components/view/Modal';
-import { IOrderForm, Order } from './components/view/Order';
+import { Order } from './components/view/Order';
 import { Succsess } from './components/view/Succsess';
 
 const events = new EventEmitter();
@@ -100,7 +100,6 @@ events.on('selected:changed', () => {
 });
 
 events.on('preview:button-click', () => {
-  console.log('preview:button-click получен');
   const product = catalogModel.getSelectedItem();
   if (!product) return;
 
