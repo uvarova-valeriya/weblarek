@@ -55,6 +55,15 @@ const modal = new Modal(modalContainer, events);
 const cardElement = cloneTemplate(basketTemplate);
 const basketView = new Basket(cardElement, events);
 
+const orderElement = cloneTemplate(orderTemplate) as HTMLFormElement;
+const orderForm = new Order(orderElement, events);
+
+const contactsElement = cloneTemplate(contactsTemplate) as HTMLFormElement;
+const contactsForm = new Contacts(contactsElement, events);
+
+const successElement = cloneTemplate(successTemplate);
+const success = new Succsess(successElement, events);
+
 appApi.getProducts()
   .then((productData) => {
     catalogModel.setItems(productData.items);
@@ -139,7 +148,6 @@ events.on('basket:changed', () => {
 });
 
 events.on('basket:open', () => {
-  events.emit('basket:changed');
   modal.content = basketView.render();
   modal.open();
 });
@@ -155,57 +163,35 @@ events.on('contacts:change', (data: any) => {
 });
 
 events.on('basket:checkout', () => {
-  const orderElement = cloneTemplate(orderTemplate) as HTMLFormElement;
-  const orderForm = new Order(orderElement, events);
-
-  events.emit('order:form-created', { form: orderForm });
   modal.content = orderForm.render();
   modal.open();
   events.emit('buyer:changed');
 });
 
-events.on('order:form-created', ({ form }: { form: Order }) => {
-  events.on('buyer:changed', () => {
-    const buyerData = buyerModel.getData();
-    form.payment = buyerData.payment;
-    form.address = buyerData.address;
-
-    const errors = buyerModel.validate();
-    form.errors = [errors.get('payment'), errors.get('address')]
-      .filter(Boolean)
-      .join(', ');
-    form.valid = !errors.has('payment') && !errors.has('address');
-  });
-});
-
 events.on('order:next', () => {
-  modal.close();
-
-  const contactsElement = cloneTemplate(contactsTemplate) as HTMLFormElement;
-  const contactsForm = new Contacts(contactsElement, events);
-
-  events.emit('contacts:form-created', { form: contactsForm });
   modal.content = contactsForm.render();
   events.emit('buyer:changed');
-  modal.open();
 });
 
-events.on('contacts:form-created', ({ form }: { form: Contacts }) => {
-  events.on('buyer:changed', () => {
-    const buyerData = buyerModel.getData();
-    const errors = buyerModel.validate();
+events.on('buyer:changed', () => {
+  const buyerData = buyerModel.getData();
+  const errors = buyerModel.validate();
 
-    form.email = buyerData.email;
-    form.phone = buyerData.phone;
+  orderForm.payment = buyerData.payment;
+  orderForm.address = buyerData.address;
+  orderForm.errors = [errors.get('payment'), errors.get('address')]
+    .filter(Boolean)
+    .join(', ');
+  orderForm.valid = !errors.has('payment') && !errors.has('address');
 
-    const contactErrors = [errors.get('email'), errors.get('phone')]
-      .filter(Boolean)
-      .join(', ');
-    form.errors = contactErrors;
-
-    form.valid = !errors.has('email') && !errors.has('phone');
-  });
-});
+  contactsForm.email = buyerData.email;
+  contactsForm.phone = buyerData.phone;
+  const contactErrors = [errors.get('email'), errors.get('phone')]
+    .filter(Boolean)
+    .join(', ');
+  contactsForm.errors = contactErrors;
+  contactsForm.valid = !errors.has('email') && !errors.has('phone');
+})
 
 events.on('order:submit', async () => {
   const buyerData = buyerModel.getData();
@@ -218,25 +204,19 @@ events.on('order:submit', async () => {
     total: basketModel.getTotal(),
     items: basketModel.getItems().map(item => item.id)
   };
-
-
+  
   try {
     const result = await appApi.postOrder(order);
     events.emit('success:open', { total: result.total });
-
     basketModel.clear();
     buyerModel.clear();
-
   } catch (error) {
     console.error('Ошибка оформления заказа:', error);
   }
 });
 
 events.on('success:open', ({ total }: { total: number }) => {
-  const successElement = cloneTemplate(successTemplate);
-  const success = new Succsess(successElement, events);
   success.total = total;
-
   modal.content = success.render();
   modal.open();
 });
