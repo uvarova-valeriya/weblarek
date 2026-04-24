@@ -425,9 +425,7 @@ Presenter - презентер содержит основную логику п
 `preview:button-click` - сообщить, что кнопка нажата
 `{formName}:change` - изменение любого поля формы (`order:change` или `contacts:change`);
 `basket:checkout` - клик по кнопке "Оформить";
-`order:form-created` - регистрирует форму и подписывается на `buyer:changed`
 `order:next` - переход ко второй форме;
-`contacts:form-created` - регистрирует форму контактов и подписывается на `buyer:changed`
 `order:submit` - отправка заказа (кнопка "Оплатить");
 
 `basket:changed` - изменение корзины;
